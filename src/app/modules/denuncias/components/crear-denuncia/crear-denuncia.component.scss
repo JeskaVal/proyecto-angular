@@ -1,0 +1,262 @@
+.contenedor-denuncia {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.encabezado {
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 2.5rem;
+    margin: 0 0 10px;
+  }
+
+  .subtitulo {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+  }
+}
+
+.formulario-denuncia {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.seccion-formulario {
+  margin-bottom: 40px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .titulo-seccion {
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+  }
+}
+
+.grupo-radio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #667eea;
+    background-color: #f5f7ff;
+  }
+
+  input[type="radio"] {
+    margin-right: 15px;
+    margin-top: 2px;
+    cursor: pointer;
+
+    &:checked ~ .custom-radio {
+      border-color: #667eea;
+      background: #667eea;
+
+      &::after {
+        content: '✓';
+        color: white;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .custom-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .radio-contenido {
+    strong {
+      display: block;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    small {
+      color: #666;
+    }
+  }
+}
+
+.fila-formulario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+
+  input, select, textarea {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &.error {
+      border-color: #e74c3c;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+}
+
+.mensaje-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+.alerta {
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  &.alerta-exito {
+    background-color: #d4edda;
+    border: 2px solid #28a745;
+    color: #155724;
+
+    .icono-exito {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #28a745;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    h3 {
+      margin: 0 0 5px;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+  }
+
+  &.alerta-error {
+    background-color: #f8d7da;
+    border: 2px solid #e74c3c;
+    color: #721c24;
+
+    .icono-error {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+}
+
+.seccion-acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.boton {
+  padding: 14px 40px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.boton-primario {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.texto-aviso {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .grupo-radio {
+    grid-template-columns: 1fr;
+  }
+
+  .fila-formulario {
+    grid-template-columns: 1fr;
+  }
+
+  .encabezado h1 {
+    font-size: 1.8rem;
+  }
+
+  .formulario-denuncia {
+    padding: 25px;
+  }
+}

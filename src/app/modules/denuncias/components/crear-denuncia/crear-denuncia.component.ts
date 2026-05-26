@@ -3,12 +3,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DenunciaService } from '../../services/denuncia.service';
 import { Denuncia, AcuseRecibo } from '../../models/denuncia.model';
-import { TemplateLiteral } from '@angular/compiler';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+class MyComponent {}
 
 @Component({
     selector: 'app-crear-denuncia',
     templateUrl: './crear-denuncia.component.html',
-    styleUrl: './crear-denuncia.component.scss'
+    styleUrl: './crear-denuncia.component.scss',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule],
+    template: `<div *ngIf="visible">Hi</div>`
 })
 
 export class CrearDenunciaComponent implements OnInit {

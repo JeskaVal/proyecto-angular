@@ -1,0 +1,200 @@
+<div class="contenedor-denuncia">
+  <div class="encabezado">
+    <h1>📋 Presentar una Denuncia</h1>
+    <p class="subtitulo">Ayúdanos a mantener la transparencia y combatir la corrupción</p>
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="enviado" class="alerta alerta-exito">
+    <div class="icono-exito">✓</div>
+    <h3>¡Denuncia registrada exitosamente!</h3>
+    <p>Tu denuncia ha sido recibida. Serás redirigido al acuse de recibo...</p>
+  </div>
+
+  <!-- Formulario -->
+  <form [formGroup]="formulario" (ngSubmit)="enviarDenuncia()" *ngIf="!enviado" class="formulario-denuncia">
+    
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMensaje" class="alerta alerta-error">
+      <span class="icono-error">✕</span>
+      <span>{{ errorMensaje }}</span>
+    </div>
+
+    <!-- SECCIÓN 1: Tipo de Denunciante -->
+    <section class="seccion-formulario">
+      <h2 class="titulo-seccion">1. ¿Quién eres?</h2>
+      <div class="grupo-radio">
+        <label class="radio-option">
+          <input type="radio" formControlName="tipo_denunciante" value="anonimo">
+          <span class="custom-radio"></span>
+          <div class="radio-contenido">
+            <strong>Denuncia Anónima</strong>
+            <small>No necesitas proporcionar tus datos</small>
+          </div>
+        </label>
+        <label class="radio-option">
+          <input type="radio" formControlName="tipo_denunciante" value="identificado">
+          <span class="custom-radio"></span>
+          <div class="radio-contenido">
+            <strong>Denuncia Identificada</strong>
+            <small>Proporcionarás tus datos de contacto</small>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: Datos del Denunciante (si es identificado) -->
+    <section class="seccion-formulario" *ngIf="!esAnonimo">
+      <h2 class="titulo-seccion">2. Datos de Identificación</h2>
+      <div class="fila-formulario">
+        <div class="campo-grupo">
+          <label for="nombre_denunciante">Nombre Completo *</label>
+          <input 
+            type="text" 
+            id="nombre_denunciante" 
+            formControlName="nombre_denunciante"
+            placeholder="Tu nombre completo"
+            [class.error]="tieneError('nombre_denunciante')"
+          >
+          <div *ngIf="tieneError('nombre_denunciante')" class="mensaje-error">
+            {{ obtenerMensajeError('nombre_denunciante') }}
+          </div>
+        </div>
+
+        <div class="campo-grupo">
+          <label for="correo_denunciante">Correo Electrónico *</label>
+          <input 
+            type="email" 
+            id="correo_denunciante" 
+            formControlName="correo_denunciante"
+            placeholder="tu@email.com"
+            [class.error]="tieneError('correo_denunciante')"
+          >
+          <div *ngIf="tieneError('correo_denunciante')" class="mensaje-error">
+            {{ obtenerMensajeError('correo_denunciante') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="fila-formulario">
+        <div class="campo-grupo">
+          <label for="telefono_denunciante">Teléfono (Opcional)</label>
+          <input 
+            type="tel" 
+            id="telefono_denunciante" 
+            formControlName="telefono_denunciante"
+            placeholder="+1 (000) 000-0000"
+          >
+        </div>
+
+        <div class="campo-grupo">
+          <label for="tipo_identificacion">Tipo de Identificación *</label>
+          <select 
+            id="tipo_identificacion" 
+            formControlName="tipo_identificacion"
+            [class.error]="tieneError('tipo_identificacion')"
+          >
+            <option value="">Selecciona un tipo</option>
+            <option *ngFor="let tipo of tipos_identificacion" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <label for="numero_identificacion">Número de Identificación *</label>
+        <input 
+          type="text" 
+          id="numero_identificacion" 
+          formControlName="numero_identificacion"
+          placeholder="Ej: XXXX000000HXXXXX00"
+          [class.error]="tieneError('numero_identificacion')"
+        >
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: Datos de la Denuncia -->
+    <section class="seccion-formulario">
+      <h2 class="titulo-seccion">3. Detalles de la Denuncia</h2>
+      
+      <div class="campo-grupo">
+        <label for="titulo_denuncia">Asunto de la Denuncia *</label>
+        <input 
+          type="text" 
+          id="titulo_denuncia" 
+          formControlName="titulo_denuncia"
+          placeholder="Resumen breve de tu denuncia"
+          [class.error]="tieneError('titulo_denuncia')"
+        >
+        <div *ngIf="tieneError('titulo_denuncia')" class="mensaje-error">
+          {{ obtenerMensajeError('titulo_denuncia') }}
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <label for="descripcion_denuncia">Descripción Detallada *</label>
+        <textarea 
+          id="descripcion_denuncia" 
+          formControlName="descripcion_denuncia"
+          placeholder="Proporciona todos los detalles relevantes de tu denuncia..."
+          rows="6"
+          [class.error]="tieneError('descripcion_denuncia')"
+        ></textarea>
+        <div *ngIf="tieneError('descripcion_denuncia')" class="mensaje-error">
+          {{ obtenerMensajeError('descripcion_denuncia') }}
+        </div>
+      </div>
+
+      <div class="fila-formulario">
+        <div class="campo-grupo">
+          <label for="fecha_hechos">Fecha de los Hechos (Opcional)</label>
+          <input 
+            type="date" 
+            id="fecha_hechos" 
+            formControlName="fecha_hechos"
+          >
+        </div>
+
+        <div class="campo-grupo">
+          <label for="prioridad">Nivel de Prioridad</label>
+          <select id="prioridad" formControlName="prioridad">
+            <option value="baja">Baja</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+            <option value="urgente">Urgente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="campo-grupo">
+        <label for="lugar_hechos">Lugar de los Hechos (Opcional)</label>
+        <input 
+          type="text" 
+          id="lugar_hechos" 
+          formControlName="lugar_hechos"
+          placeholder="Dirección o ubicación de los hechos"
+        >
+      </div>
+
+      <div class="campo-grupo">
+        <label for="dependencia_implicada">Dependencia Implicada (Opcional)</label>
+        <select id="dependencia_implicada" formControlName="dependencia_implicada">
+          <option value="">Selecciona o déjalo en blanco</option>
+          <option *ngFor="let dep of dependencias" [value]="dep">{{ dep }}</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Botón de envío -->
+    <div class="seccion-acciones">
+      <button 
+        type="submit" 
+        class="boton boton-primario"
+        [disabled]="cargando || formulario.invalid"
+      >
+        <span *ngIf="!cargando">📤 Enviar Denuncia</span>
+        <span *ngIf="cargando">Enviando...</span>
+      </button>
+      <p class="texto-aviso">* Campos obligatorios</p>
+    </div>
+  </form>
+</div>
