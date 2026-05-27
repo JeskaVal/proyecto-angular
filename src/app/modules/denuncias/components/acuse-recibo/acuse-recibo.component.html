@@ -1,0 +1,65 @@
+<div class="contenedor-acuse" *ngIf="!cargando && acuseRecibo">
+  <div class="tarjeta-acuse">
+    <div class="encabezado-acuse">
+      <div class="icono-exito">✓</div>
+      <h1>¡Denuncia Registrada!</h1>
+      <p class="subtitulo">Tu denuncia ha sido recibida correctamente en el sistema</p>
+    </div>
+
+    <div class="seccion-folio">
+      <p class="etiqueta-folio">Tu Folio de Referencia</p>
+      <div class="caja-folio">
+        <code class="numero-folio">{{ acuseRecibo.folio }}</code>
+        <button class="boton-copiar" (click)="copiarFolio()" title="Copiar folio">
+          📋 Copiar
+        </button>
+      </div>
+      <small class="texto-folio">Guarda este número para consultar el estado de tu denuncia</small>
+    </div>
+
+    <div class="detalles-acuse">
+      <h3>Detalles de tu Denuncia</h3>
+      <div class="fila-detalle">
+        <span class="etiqueta">Asunto:</span>
+        <span class="valor">{{ acuseRecibo.titulo_denuncia }}</span>
+      </div>
+      <div class="fila-detalle">
+        <span class="etiqueta">Fecha de Recepción:</span>
+        <span class="valor">{{ acuseRecibo.fecha_recibida }}</span>
+      </div>
+      <div class="fila-detalle">
+        <span class="etiqueta">Estado Actual:</span>
+        <span class="valor badge" [ngClass]="'badge-' + acuseRecibo.estado">
+          {{ acuseRecibo.estado }}
+        </span>
+      </div>
+    </div>
+
+    <div class="proximos-pasos">
+      <h3>Próximos Pasos</h3>
+      <ol class="lista-pasos">
+        <li *ngFor="let paso of acuseRecibo.proximos_pasos" class="paso">
+          {{ paso }}
+        </li>
+      </ol>
+    </div>
+
+    <div class="seccion-acciones">
+      <button class="boton boton-primario" (click)="descargarAcuse()">
+        📥 Descargar Acuse
+      </button>
+      <button class="boton boton-secundario" (click)="irAConsultar()">
+        🔍 Consultar Estado
+      </button>
+    </div>
+
+    <div class="aviso-importante">
+      <strong>⚠️ Importante:</strong> Conserva tu folio en un lugar seguro. Lo necesitarás para hacer seguimiento a tu denuncia.
+    </div>
+  </div>
+</div>
+
+<div class="contenedor-cargando" *ngIf="cargando">
+  <div class="spinner"></div>
+  <p>Preparando tu acuse de recibo...</p>
+</div>

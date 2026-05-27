@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DenunciaService } from '../../services/denuncia.service';
 import { AcuseRecibo } from '../../models/denuncia.model';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-acuse-recibo',
   templateUrl: './acuse-recibo.component.html',
-  styleUrls: ['./acuse-recibo.component.scss']
+  styleUrls: ['./acuse-recibo.component.scss'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class AcuseReciboComponent implements OnInit {
   acuseRecibo: AcuseRecibo | null = null;
