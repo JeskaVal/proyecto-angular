@@ -43,15 +43,24 @@ export class DenunciaService {
         this.acuseRecibo$.next(null);
     }
 
+    // POST /api/denuncias/{folio}/archivos - Subir archivo
+    subirArchivo(folio: string, archivo: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('archivo', archivo);
+
+        return this.http.post<any>(
+            `${this.apiUrl}/${folio}/archivos`,
+            formData
+        );
+    }
+
     // POST /api/denuncias/{folio}/archivos - Obtener archivos
-    obtenerArchivos(folio: string):
-    Observable<any> {
+    obtenerArchivos(folio: string): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/${folio}/archivos`);
     }
 
     //GET /api/denuncias/archivos/{id}/descargar - Descargar Archivo
-    descargarArchivo(archivoId: number):
-    Observable<Blob> {
+    descargarArchivo(archivoId: number): Observable<Blob> {
         return this.http.get<Blob>(
             `{$this.apiUrl}/archivos/${archivoId}/descargar`,
             { responseType: 'blob' as 'json' }
@@ -59,8 +68,7 @@ export class DenunciaService {
     }
 
     // GET /api/denuncias/{folio}/bitacora - Obtener bitácora
-    obtenerBitacora(folio: string):
-    Observable<any> {
+    obtenerBitacora(folio: string): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/${folio}/bitacora`);
     }
 

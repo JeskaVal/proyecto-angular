@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DenunciaService } from '../../services/denuncia.service.ts;
+import { DenunciaService } from '../../services/denuncia.service';
 import { Denuncia } from '../../models/denuncia.model';
 
 @Component({
@@ -61,7 +61,7 @@ export class ConsultarDenunciaComponent implements OnInit {
             },
             error: (error) => {
                 this.buscando = false;
-                this.errorMenssaje = 'No se encontró denuncia con ese folio';
+                this.errorMensaje = 'No se encontró denuncia con ese folio';
                 this.denuncia = null;
             }
         });
