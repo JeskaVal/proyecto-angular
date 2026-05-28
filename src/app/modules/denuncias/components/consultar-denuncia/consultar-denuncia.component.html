@@ -1,0 +1,170 @@
+<div class="contenedor-consulta">
+  <div class="encabezado">
+    <h1>🔍 Consultar Denuncia</h1>
+    <p class="subtitulo">Ingresa tu folio para ver el estado de tu denuncia</p>
+  </div>
+
+  <!-- Formulario de búsqueda -->
+  <div class="caja-busqueda">
+    <form [formGroup]="formularioBusqueda" (ngSubmit)="buscarDenuncia()" class="formulario-folio">
+      <div class="grupo-entrada">
+        <input
+          type="text"
+          formControlName="folio"
+          placeholder="Ej: DEN-2025-000001"
+          class="entrada-folio"
+          [attr.disabled]="buscando ? true : null"
+        >
+        <button
+          type="submit"
+          class="boton boton-buscar"
+          [disabled]="buscando || formularioBusqueda.invalid"
+        >
+          <span *ngIf="!buscando">🔎 Buscar</span>
+          <span *ngIf="buscando">Buscando...</span>
+        </button>
+      </div>
+      <div *ngIf="errorMensaje && !buscando" class="alerta alerta-error">
+        {{ errorMensaje }}
+      </div>
+    </form>
+  </div>
+
+  <!-- Resultado de búsqueda -->
+  <div *ngIf="denuncia" class="resultado-consulta">
+    
+    <!-- Encabezado del resultado -->
+    <div class="encabezado-resultado">
+      <div class="folio-resultado">
+        <span class="label-folio">Folio:</span>
+        <code class="codigo-folio">{{ denuncia.folio }}</code>
+      </div>
+      <div class="estado-resultado">
+        <span class="label-estado">Estado Actual:</span>
+        <span class="badge" [ngClass]="'badge-' + denuncia.estado">
+          {{ obtenerEtiquetaEstado(denuncia.estado).label }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Información de la denuncia -->
+    <section class="seccion-info">
+      <h2>Información de la Denuncia</h2>
+      <div class="grid-info">
+        <div class="item-info">
+          <span class="label">Asunto:</span>
+          <p class="valor">{{ denuncia.titulo_denuncia }}</p>
+        </div>
+        <div class="item-info">
+          <span class="label">Prioridad:</span>
+          <p class="valor">
+            <span class="badge badge-prioridad" [ngClass]="'prioridad-' + denuncia.prioridad">
+              {{ denuncia.prioridad | uppercase }}
+            </span>
+          </p>
+        </div>
+        <div class="item-info">
+          <span class="label">Fecha de Recepción:</span>
+          <p class="valor">{{ denuncia.fecha_recibida | date: 'medium' }}</p>
+        </div>
+        <div class="item-info" *ngIf="denuncia.fecha_ultimaActualizacion">
+          <span class="label">Última Actualización:</span>
+          <p class="valor">{{ denuncia.fecha_ultimaActualizacion | date: 'medium' }}</p>
+        </div>
+        <div class="item-info" *ngIf="denuncia.lugar_hechos">
+          <span class="label">Lugar de los Hechos:</span>
+          <p class="valor">{{ denuncia.lugar_hechos }}</p>
+        </div>
+        <div class="item-info" *ngIf="denuncia.dependencia_implicada">
+          <span class="label">Dependencia Implicada:</span>
+          <p class="valor">{{ denuncia.dependencia_implicada }}</p>
+        </div>
+      </div>
+
+      <div class="item-descripcion">
+        <span class="label">Descripción:</span>
+        <p class="valor-descripcion">{{ denuncia.descripcion_denuncia }}</p>
+      </div>
+    </section>
+
+    <!-- Sección de Archivos -->
+    <section class="seccion-expandible">
+      <button class="boton-expandir" (click)="toggleArchivos()">
+        <span class="icono">{{ mostrarArchivos ? '▼' : '▶' }}</span>
+        📎 Archivos Adjuntos ({{ archivos.length }})
+      </button>
+
+      <div *ngIf="mostrarArchivos" class="contenido-expandible">
+        <div *ngIf="archivos.length === 0" class="vacio">
+          No hay archivos adjuntos
+        </div>
+        <div *ngIf="archivos.length > 0" class="lista-archivos">
+          <div *ngFor="let archivo of archivos" class="item-archivo">
+            <div class="info-archivo">
+              <span class="icono-tipo">{{ obtenerTipoArchivoIcono(archivo.tipo_archivo) }}</span>
+              <div class="detalles">
+                <p class="nombre-archivo">{{ archivo.nombre_original }}</p>
+                <small class="meta-archivo">
+                  {{ (archivo.tamaño_bytes / 1024).toFixed(2) }} KB
+                  • {{ archivo.fecha_carga | date: 'short' }}
+                </small>
+              </div>
+            </div>
+            <button
+              class="boton boton-descargar"
+              (click)="descargarArchivo(archivo)"
+              title="Descargar"
+            >
+              ⬇️
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección de Bitácora -->
+    <section class="seccion-expandible">
+      <button class="boton-expandir" (click)="toggleBitacora()">
+        <span class="icono">{{ mostrarBitacora ? '▼' : '▶' }}</span>
+        📋 Historial de Cambios ({{ bitacora.length }})
+      </button>
+
+      <div *ngIf="mostrarBitacora" class="contenido-expandible">
+        <div *ngIf="bitacora.length === 0" class="vacio">
+          Sin cambios registrados
+        </div>
+        <div *ngIf="bitacora.length > 0" class="linea-tiempo">
+          <div *ngFor="let evento of bitacora; let last = last" class="evento-bitacora">
+            <div class="punto-timeline"></div>
+            <div class="contenido-evento">
+              <h4 class="accion-evento">{{ evento.accion }}</h4>
+              <p class="descripcion-evento">{{ evento.descripcion }}</p>
+              <div class="meta-evento">
+                <small class="fecha">{{ evento.fecha_accion | date: 'medium' }}</small>
+                <small *ngIf="evento.usuario?.name" class="usuario">
+                  Por: {{ evento.usuario.name }}
+                </small>
+              </div>
+              <div *ngIf="evento.estado_anterior || evento.estado_nuevo" class="cambio-estado">
+                <span class="estado-ant" *ngIf="evento.estado_anterior">
+                  {{ evento.estado_anterior }}
+                </span>
+                <span class="flecha">→</span>
+                <span class="estado-nuevo" *ngIf="evento.estado_nuevo">
+                  {{ evento.estado_nuevo }}
+                </span>
+              </div>
+            </div>
+            <div class="linea" *ngIf="!last"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estado de carga -->
+   <div *ngIf="cargando" class="estado-cargando">
+    <div class="spinner"></div>
+        <p>Cargando Información...</p>
+   </div>
+</div>
