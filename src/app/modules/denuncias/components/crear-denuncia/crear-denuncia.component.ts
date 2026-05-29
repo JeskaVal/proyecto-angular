@@ -81,7 +81,7 @@ export class CrearDenunciaComponent implements OnInit {
         const tipo_id = this.formulario.get('tipo_identificacion');
         const numero_id = this.formulario.get('numero_identificacion');
 
-        if (this.esAnonimo) {
+        if (!this.esAnonimo) {
             nombre?.clearAsyncValidators();
             nombre?.clearValidators();
             correo?.clearAsyncValidators();

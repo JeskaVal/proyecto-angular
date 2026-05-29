@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { DashboardData, Reporte } from '../models/estadisticas.model';
@@ -17,20 +17,30 @@ export class EstadisticasService {
     }
 
     obtenerReporte(fechaDesde?: string, fechaHasta?: string): Observable<any> {
-        let params = '';
-        if (fechaDesde) params += `?fecha_desde=${fechaDesde}`;
-        if (fechaHasta) params += params ? `&fecha_hasta=${fechaHasta}` : `?fecha_hasta=${fechaHasta}`;
+        let params = new HttpParams();
+        if (fechaDesde) {
+            params = params.set('fecha_desde', fechaDesde);
+        }
+        if (fechaHasta) {
+            params = params.set('fecha_hasta', fechaHasta);
+        }
 
-        return this.http.get<any>(`${this.apiUrl}/reportes${params}`);
+        return this.http.get<any>(`${this.apiUrl}/reportes`, { params });
     }
 
     exportarReporte(fechaDesde?: string, fechaHasta?: string): Observable<Blob> {
-        let params = '';
-        if (fechaDesde) params += `?fecha_desde=${fechaDesde}`;
-        if (fechaHasta) params += params ? `$fecha_hasta=${fechaHasta}` : `?fecha_hasta=${fechaHasta}`;
+        let params = new HttpParams();
 
-        return this.http.get<Blob>(
-            `${this.apiUrl}/exportar-reportes${params}`, { responseType: 'blob' as 'json' }
-        );
+        if (fechaDesde) {
+            params = params.set('fecha_desde', fechaDesde);
+        }
+        if (fechaHasta) {
+            params = params.set('fecha_hasta', fechaHasta);
+        }
+
+        return this.http.get<Blob>(`${this.apiUrl}/exportar-reportes`, {
+            params: params,
+            responseType: 'blob' as 'json'
+        });
     }
 }

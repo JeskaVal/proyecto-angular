@@ -62,7 +62,7 @@ export class DenunciaService {
     //GET /api/denuncias/archivos/{id}/descargar - Descargar Archivo
     descargarArchivo(archivoId: number): Observable<Blob> {
         return this.http.get<Blob>(
-            `{$this.apiUrl}/archivos/${archivoId}/descargar`,
+            `{this.apiUrl}/archivos/${archivoId}/descargar`,
             { responseType: 'blob' as 'json' }
         );
     }

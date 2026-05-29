@@ -38,7 +38,7 @@ export class DashboardAdminComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarDashboard();
-        setInterval(() => this.cargarDashboard(), 3000); //Actualiza cada 30 segundos
+        setInterval(() => this.cargarDashboard(), 30000); //Actualiza cada 30 segundos
     }
 
     cargarDashboard(): void {
