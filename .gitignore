@@ -38,6 +38,7 @@ yarn-error.log
 testem.log
 /typings
 __screenshots__/
+/php-8.5.5-src
 
 # System files
 .DS_Store
