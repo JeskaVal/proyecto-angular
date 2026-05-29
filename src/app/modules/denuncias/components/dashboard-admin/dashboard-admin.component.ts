@@ -3,11 +3,13 @@ import { EstadisticasService } from '../../services/estadisticas.service';
 import { DashboardData } from '../../models/estadisticas.model';
 import { argsArgArrayOrObject } from 'rxjs/internal/util/argsArgArrayOrObject';
 import { setEnableTemplateSourceLocations } from '@angular/compiler';
+import { DatePipe, NgIf, NgFor, NgClass, UpperCasePipe, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-dashboard-admin',
     templateUrl: './dashboard-admin.component.html',
-    styleUrls: ['./dashboard-admin.component.scss']
+    styleUrls: ['./dashboard-admin.component.scss'],
+    imports: [DatePipe, NgIf, NgFor, NgClass, UpperCasePipe, DecimalPipe]
 })
 export class DashboardAdminComponent implements OnInit {
     dashboard: DashboardData | null = null;

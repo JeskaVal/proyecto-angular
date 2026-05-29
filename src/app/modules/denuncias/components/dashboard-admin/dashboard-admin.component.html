@@ -1,0 +1,142 @@
+<div class="contenedor-dashboard">
+    <div class="encabezado-dashboard">
+        <h1>📊 Dashboard Administrativo</h1>
+        <div class="info-actualizacion">
+            <small>Última actualización: {{ fechaActualizacion | date: 'short' }}</small>
+            <button class="boton-actualizar" (click)="cargarDashboard()"[disabled]="cargando">
+                🔄 Actualizar
+            </button>
+        </div>
+    </div>
+
+    <div>
+        <div class="spinner"></div>
+        <p>Cargando dashboard...</p>
+    </div>
+
+    <div *ngIf="errorMensaje" class="alerta alerta-error">
+        {{ errorMensaje }}
+    </div>
+
+    <div *ngIf="dashboard" class="contenido-dashboard">
+        
+        <!-- FILA 1: Tarjetas de Totales -->
+         <div class="fila-tarjetas">
+            <div class="tarjeta tarjeta-total">
+                <div class="icono">📋</div>
+                <div class="contenido">
+                    <p class="etiqueta">Total de Denuncias</p>
+                    <p class="valor">{{ dashboard.totales.total_denuncias }}</p>
+                </div>
+            </div>
+
+            <div class="tarjeta tarjeta-hoy">
+                <div class="icono">📅</div>
+                <div class="contenido">
+                    <p class="etiqueta">Recibidas Hoy</p>
+                    <p class="valor">{{ dashboard.totales.denuncias_recibidas_hoy }}</p>
+                </div>
+            </div>
+
+            <div class="tarjeta tarjeta-en-reposo">
+                <div class="icono">⏳</div>
+                <div class="contenido">
+                    <p class="etiqueta">En Proceso</p>
+                    <p class="valor">{{ dashboard.totales.denuncias_en_proceso}}</p>
+                </div>
+            </div>
+
+            <div class="tarjeta tarjeta-resuelta">
+                <div class="icono">✓</div>
+                <div class="contenido">
+                    <p class="etiqueta">Resueltas</p>
+                    <p class="valor">{{ dashboard.totales.denuncias_resueltas }}</p>
+                </div>
+            </div>
+
+            <!-- FILA 2: Gráficos-->
+             <div class="fila-graficos">
+                <div class="seccion-grafico">
+                    <h3>Distribución por Estado</h3>
+                    <div class="barras-estado">
+                        <div *ngFor="let estado of dashboard.por_estado" class="barra-item">
+                            <div class="barra-contenedor">
+                                <div class="barra"
+                                    [style.width.%]="estado.porcentaje"
+                                    [style.backgroundColor]="obtenerColorEstado(estado.estado)">
+                                </div>
+                            </div>
+                            <div class="barra-label">
+                                <span class="nombre">{{ estado.cantidad }} ({{ estado.porcentaje }}%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
+
+             <!-- Gráfico de Prioridades-->
+             <div class="seccion-grafico">
+                <h3>Distribución por Prioridad</h3>
+                <div class="lista-prioridades">
+                    <div *ngFor="let prioridad of dashboard.por_prioridad" class="item-prioridad">
+                        <span class="badge" [ngClass]="'prioridad-' + prioridad.prioridad">
+                            {{ prioridad.prioridad | uppercase }}
+                        </span>
+                        <span class="cantidad">{{ prioridad.cantidad }}</span>
+                    </div>
+                </div>
+             </div>
+
+             <!-- FILA 3: Línea de tiempo últimas 7 días -->
+             <div class="seccion-timeline">
+                <h3>Denuncias Últimos 7 Días</h3>
+                <div class="grafico-linea">
+                    <div class="contenedor-barras">
+                        <div *ngFor="let dia of dashboard.ultimas_7_dias">
+                            <div class="barra-dia" [style.height.%]="(dia.cantidad / 10) * 100"></div>
+                            <p class="fecha">{{ dia.fecha | date: 'dd/MM' }}</p>
+                            <p class="cantidad">{{ dia.cantidad }}</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+
+             <!-- FILA 4: Métricas -->
+              <div class="fila-metricas">
+                <div class="metricas-item">
+                    <p class="etiqueta">Tiempo Promedio de Resolución</p>
+                    <p class="valor-metrica">{{ dashboard.promedio_tiempo_resolucion | number: '1.0-0' }} días</p>
+                </div>
+              </div>
+
+              <!-- FILA 5: Denuncias Recientes -->
+              <div class="seccion-recientes">
+                <h3>Denuncias Más Recientes</h3>
+                <div class="tabla-recientes">
+                    <div class="encabezado-tabla">
+                        <div class="col col-folio">Folio</div>
+                        <div class="col col-asunto">Asunto</div>
+                        <div class="col col-estado">Estado</div>
+                        <div class="col col-prioridad">Prioridad</div>
+                        <div class="col col-fecha">Fecha</div>
+                    </div>
+                    <div *ngFor="let denuncia of dashboard.denuncias_recientes" class="fila-tabla">
+                        <div class="col col-folio">
+                            <code>{{ denuncia.folio }}</code>
+                        </div>
+                        <div class="col col-asunto">{{ denuncia.titulo }}</div>
+                        <div class="col col-estado">
+                            <span class="badge" [ngClass]="'badge-' + denuncia.estado">{{ obtenerLabelEstado(denuncia.estado) }}</span>
+                        </div>
+                        <div class="col col-prioridad">
+                            <span class="badge badge-prioridad" [ngClass]="'prioridad-' + denuncia.prioridad">{{ denuncia.prioridad | uppercase }}
+                            </span>
+                        </div>
+                        <div class="col col-fecha">{{ denuncia.fecha_recibida | date: 'short' }}</div>
+                    </div>
+                </div>
+              </div>
+
+         </div>
+    </div>
+</div>
