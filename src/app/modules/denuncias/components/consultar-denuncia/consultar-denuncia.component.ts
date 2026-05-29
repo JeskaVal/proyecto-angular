@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { DenunciaService } from '../../services/denuncia.service';
 import { Denuncia } from '../../models/denuncia.model';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
     selector: 'app-consultar-denuncia',
     templateUrl: './consultar-denuncia.component.html',
     styleUrls: ['./consultar-denuncia.component.scss']
@@ -113,8 +116,8 @@ export class ConsultarDenunciaComponent implements OnInit {
         });
     }
 
-    obtenerEtiquetaEstado(estado: string): any {
-        return this.estados.find(e => e.value === estado) || { label: estado, color: 'gris' };
+    obtenerEtiquetaEstado(estado: string | undefined): any {
+        return this.estados.find(e => e.value === estado) || { label: estado ?? '', color: 'gris' };
     }
 
     toggleBitacora(): void {
