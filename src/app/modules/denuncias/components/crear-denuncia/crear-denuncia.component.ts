@@ -6,14 +6,12 @@ import { Denuncia, AcuseRecibo } from '../../models/denuncia.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-class MyComponent {}
-
 @Component({
+    standalone: true,
     selector: 'app-crear-denuncia',
     templateUrl: './crear-denuncia.component.html',
     styleUrl: './crear-denuncia.component.scss',
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
-    template: `<div *ngIf="visible">Hi</div>`
+    imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 
 export class CrearDenunciaComponent implements OnInit {
@@ -59,8 +57,8 @@ export class CrearDenunciaComponent implements OnInit {
             telefono_denunciante: [''],
             tipo_identificacion: [''],
             numero_identificacion: [''],
-            titulo_denuncia: ['', Validators.required, Validators.minLength(10)],
-            descripcion_denuncia: ['', Validators.required, Validators.minLength(50)],
+            titulo_denuncia: ['', [Validators.required, Validators.minLength(10)]],
+            descripcion_denuncia: ['', [Validators.required, Validators.minLength(50)]],
             fecha_hechos: [''],
             lugar_hechos: [''],
             dependencia_implicada: [''],
@@ -82,18 +80,15 @@ export class CrearDenunciaComponent implements OnInit {
         const numero_id = this.formulario.get('numero_identificacion');
 
         if (!this.esAnonimo) {
-            nombre?.clearAsyncValidators();
-            nombre?.clearValidators();
-            correo?.clearAsyncValidators();
-            correo?.clearValidators();
-            tipo_id?.clearAsyncValidators();
-            tipo_id?.clearValidators();
-            numero_id?.clearAsyncValidators();
-            numero_id?.clearValidators();
             nombre?.setValidators([Validators.required]);
             correo?.setValidators([Validators.required, Validators.email]);
             tipo_id?.setValidators([Validators.required]);
             numero_id?.setValidators([Validators.required]);
+        } else {
+            nombre?.clearValidators();
+            correo?.clearValidators();
+            tipo_id?.clearValidators();
+            numero_id?.clearValidators();
         }
 
         nombre?.updateValueAndValidity();

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EstadisticasService } from '../../services/estadisticas.service';
 import { DashboardData } from '../../models/estadisticas.model';
-import { argsArgArrayOrObject } from 'rxjs/internal/util/argsArgArrayOrObject';
-import { setEnableTemplateSourceLocations } from '@angular/compiler';
 import { DatePipe, NgIf, NgFor, NgClass, UpperCasePipe, DecimalPipe } from '@angular/common';
 
 @Component({
