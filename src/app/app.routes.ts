@@ -7,6 +7,11 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'ping',
+    loadComponent: () => import('./ping-test/ping-test.component')
+      .then(m => m.PingTestComponent)
+  },
+  {
     path: 'denuncias',
     children: [
       {
