@@ -65,7 +65,6 @@ export class ConsultarDenunciaComponent implements OnInit {
             next: (respuesta) => {
                 this.denuncia = respuesta.data;
                 this.buscando = false;
-                this.cdr.detectChanges();
                 this.cargarBitacora();
                 this.cargarArchivos();
             },
