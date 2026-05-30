@@ -186,13 +186,23 @@
 
     <!-- Botón de envío -->
     <div class="seccion-acciones">
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="boton boton-primario"
         [disabled]="cargando || formulario.invalid"
       >
-        <span *ngIf="!cargando">📤 Enviar Denuncia</span>
-        <span *ngIf="cargando">Enviando...</span>
+        @if (!cargando) {
+          <span>📤 Enviar Denuncia</span>
+        } @else {
+          <span>Enviando...</span>
+        }
+      </button>
+      <button
+        type="button"
+        class="boton boton-secundario"
+        (click)="irAConsultar()"
+      >
+        🔍 Consultar Denuncia
       </button>
       <p class="texto-aviso">* Campos obligatorios</p>
     </div>

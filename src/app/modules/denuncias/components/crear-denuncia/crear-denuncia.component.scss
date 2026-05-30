@@ -221,6 +221,16 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
+  &.boton-secundario {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+
+    &:hover {
+      background: #f0f2f5;
+    }
+  }
+
   &.boton-primario {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;

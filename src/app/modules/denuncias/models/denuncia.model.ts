@@ -24,6 +24,7 @@ export interface AcuseRecibo {
     fecha_recibida: string;
     titulo_denuncia: string;
     estado: string;
+    contrasena_acceso: string;
     proximos_pasos: string[];
 }
 

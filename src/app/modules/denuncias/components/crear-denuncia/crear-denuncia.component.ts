@@ -128,6 +128,10 @@ export class CrearDenunciaComponent implements OnInit {
         });
     }
 
+    irAConsultar(): void {
+        this.router.navigate(['/denuncias/consultar']);
+    }
+
     get controlesMostrados() {
         return this.formulario.controls;
     }

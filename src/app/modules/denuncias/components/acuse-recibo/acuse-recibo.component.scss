@@ -94,6 +94,69 @@
     }
 }
 
+.seccion-contrasena {
+    background: #fff8e1;
+    padding: 30px;
+    text-align: center;
+    border-bottom: 1px solid #ffe082;
+    border-left: 4px solid #ffc107;
+
+    .etiqueta-contrasena {
+        color: #856404;
+        margin: 0 0 15px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .caja-contrasena {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .codigo-contrasena {
+        background: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        border: 2px solid #ffc107;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #d32f2f;
+        letter-spacing: 3px;
+        font-family: 'Courier New', Courier, monospace;
+        user-select: all;
+    }
+
+    .boton-copiar-contrasena {
+        padding: 12px 20px;
+        background: #ffc107;
+        color: #333;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+    }
+
+    .texto-contrasena {
+        display: block;
+        color: #856404;
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+}
+
 .detalles-acuse {
     padding: 30px;
     border-bottom: 1px solid #e0e0e0;

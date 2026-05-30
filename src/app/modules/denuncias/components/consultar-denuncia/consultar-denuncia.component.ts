@@ -18,16 +18,17 @@ export class ConsultarDenunciaComponent implements OnInit {
     buscando = false;
     mostrarBitacora = false;
     mostrarArchivos = false;
+    mostrarContrasena = false;
     bitacora: any[] = [];
     archivos: any[] = [];
     errorMensaje: string | null = null;
 
     estados = [
         { value: 'recibida', label: 'Recibida', color: 'azul' },
-        { value: 'en_revision', label: 'En Revisión', color: 'naranja'},
-        { value: 'en_proceso', label: 'En Proceso', color: 'amarillo'},
-        { value: 'resuelta', label: 'Resuelta', color: 'verde'},
-        { value: 'archivada', label: 'Archivada', color: 'gris'},
+        { value: 'en_revision', label: 'En Revisión', color: 'naranja' },
+        { value: 'en_proceso', label: 'En Proceso', color: 'amarillo' },
+        { value: 'resuelta', label: 'Resuelta', color: 'verde' },
+        { value: 'archivada', label: 'Archivada', color: 'gris' },
     ];
 
     constructor(
@@ -41,21 +42,25 @@ export class ConsultarDenunciaComponent implements OnInit {
 
     inicializarFormulario(): void {
         this.formularioBusqueda = this.fb.group({
-            folio: ['', Validators.required]
+            folio: ['', Validators.required],
+            contrasena_acceso: ['', Validators.required],
         });
     }
 
     buscarDenuncia(): void {
         if (this.formularioBusqueda.invalid) {
-            this.errorMensaje = 'Por favor, ingresa un folio válido';
+            this.errorMensaje = 'Por favor, ingresa el folio y la contraseña de acceso';
             return;
         }
 
         this.buscando = true;
         this.errorMensaje = null;
-        const folio = this.formularioBusqueda.get('folio')?.value;
+        this.denuncia = null;
 
-        this.denunciaService.consultarPorFolio(folio).subscribe({
+        const folio = this.formularioBusqueda.get('folio')?.value;
+        const contrasena = this.formularioBusqueda.get('contrasena_acceso')?.value;
+
+        this.denunciaService.consultarConContrasena(folio, contrasena).subscribe({
             next: (respuesta) => {
                 this.denuncia = respuesta.data;
                 this.cargarBitacora();
@@ -64,16 +69,21 @@ export class ConsultarDenunciaComponent implements OnInit {
             },
             error: (error) => {
                 this.buscando = false;
-                this.errorMensaje = 'No se encontró denuncia con ese folio';
-                this.denuncia = null;
+                if (error.status === 401) {
+                    this.errorMensaje = 'Contraseña de acceso incorrecta';
+                } else if (error.status === 404) {
+                    this.errorMensaje = 'No se encontró denuncia con ese folio';
+                } else {
+                    this.errorMensaje = 'Error al consultar la denuncia. Verifica el folio y la contraseña.';
+                }
             }
         });
     }
 
     cargarBitacora(): void {
         if (!this.denuncia) return;
-        
-        this.cargando=true;
+
+        this.cargando = true;
         this.denunciaService.obtenerBitacora(this.denuncia.folio).subscribe({
             next: (respuesta) => {
                 this.bitacora = respuesta.data;
@@ -128,8 +138,12 @@ export class ConsultarDenunciaComponent implements OnInit {
         this.mostrarArchivos = !this.mostrarArchivos;
     }
 
+    toggleContrasena(): void {
+        this.mostrarContrasena = !this.mostrarContrasena;
+    }
+
     obtenerTipoArchivoIcono(tipo: string): string {
-        switch(tipo) {
+        switch (tipo) {
             case 'imagen': return '🖼️';
             case 'pdf': return '📄';
             case 'documento': return '📋';

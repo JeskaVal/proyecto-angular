@@ -18,9 +18,17 @@ export class DenunciaService {
         return this.http.post<DenunciaResponse>(this.apiUrl,denuncia);
     }
 
-    // Consultar denuncia por folio
+    // Consultar denuncia por folio (uso interno/admin)
     consultarPorFolio(folio: string): Observable<any> {
         return this.http.get<any>(`${this.apiUrl}/${folio}`);
+    }
+
+    // Consultar denuncia con contraseña de acceso (uso público)
+    consultarConContrasena(folio: string, contrasenaAcceso: string): Observable<any> {
+        return this.http.post<any>(`${this.apiUrl}/consultar`, {
+            folio,
+            contrasena_acceso: contrasenaAcceso,
+        });
     }
 
     // Listar mis denuncias (para usuarios identificados)

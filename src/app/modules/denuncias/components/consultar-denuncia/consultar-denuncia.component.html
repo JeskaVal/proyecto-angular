@@ -7,25 +7,45 @@
   <!-- Formulario de búsqueda -->
   <div class="caja-busqueda">
     <form [formGroup]="formularioBusqueda" (ngSubmit)="buscarDenuncia()" class="formulario-folio">
-      <div class="grupo-entrada">
-        <input
-          type="text"
-          formControlName="folio"
-          placeholder="Ej: DEN-2025-000001"
-          class="entrada-folio"
-          [attr.disabled]="buscando ? true : null"
-        >
-        <button
-          type="submit"
-          class="boton boton-buscar"
-          [disabled]="buscando || formularioBusqueda.invalid"
-        >
-          @if (!buscando) {
-            <span>🔎 Buscar</span>
-          } @else {
-            <span>Buscando...</span>
-          }
-        </button>
+      <div class="filas-busqueda">
+        <div class="grupo-entrada">
+          <input
+            type="text"
+            formControlName="folio"
+            placeholder="Folio: DEN-2025-000001"
+            class="entrada-folio"
+            [attr.disabled]="buscando ? true : null"
+          >
+          <div class="entrada-contrasena-wrapper">
+            <input
+              [type]="mostrarContrasena ? 'text' : 'password'"
+              formControlName="contrasena_acceso"
+              placeholder="Contraseña de acceso"
+              class="entrada-contrasena"
+              [attr.disabled]="buscando ? true : null"
+            >
+            <button
+              type="button"
+              class="boton-toggle-contrasena"
+              (click)="toggleContrasena()"
+              title="{{ mostrarContrasena ? 'Ocultar' : 'Mostrar' }} contraseña"
+            >
+              {{ mostrarContrasena ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          <button
+            type="submit"
+            class="boton boton-buscar"
+            [disabled]="buscando || formularioBusqueda.invalid"
+          >
+            @if (!buscando) {
+              <span>🔎 Buscar</span>
+            } @else {
+              <span>Buscando...</span>
+            }
+          </button>
+        </div>
+        <small class="texto-ayuda-busqueda">Ingresa el folio y la contraseña de acceso que recibiste al registrar tu denuncia</small>
       </div>
       @if (errorMensaje && !buscando) {
         <div class="alerta alerta-error">
