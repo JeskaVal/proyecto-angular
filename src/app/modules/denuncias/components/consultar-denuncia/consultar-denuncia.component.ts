@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DenunciaService } from '../../services/denuncia.service';
@@ -33,7 +33,8 @@ export class ConsultarDenunciaComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private denunciaService: DenunciaService
+        private denunciaService: DenunciaService,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -63,9 +64,10 @@ export class ConsultarDenunciaComponent implements OnInit {
         this.denunciaService.consultarConContrasena(folio, contrasena).subscribe({
             next: (respuesta) => {
                 this.denuncia = respuesta.data;
+                this.buscando = false;
+                this.cdr.detectChanges();
                 this.cargarBitacora();
                 this.cargarArchivos();
-                this.buscando = false;
             },
             error: (error) => {
                 this.buscando = false;
