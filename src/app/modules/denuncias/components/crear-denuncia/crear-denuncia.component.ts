@@ -5,6 +5,7 @@ import { DenunciaService } from '../../services/denuncia.service';
 import { Denuncia, AcuseRecibo } from '../../models/denuncia.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { timeout } from 'rxjs/operators';
 
 @Component({
     standalone: true,
@@ -21,6 +22,9 @@ export class CrearDenunciaComponent implements OnInit {
     esAnonimo = true;
     acuseRecibo: AcuseRecibo | null = null;
     errorMensaje: string | null = null;
+
+    conexionEstado: 'verificando' | 'conectado' | 'error' | null = null;
+    mensajeConexion = '';
 
     dependencias = [
         'Policía Municipal',
@@ -47,6 +51,27 @@ export class CrearDenunciaComponent implements OnInit {
 
     ngOnInit(): void {
         this.inicializarFormulario();
+        this.probarConexion();
+    }
+
+    probarConexion(): void {
+        this.conexionEstado = 'verificando';
+        this.mensajeConexion = 'Verificando conexión con el servidor...';
+
+        this.denunciaService.verificarConexion().pipe(timeout(10000)).subscribe({
+            next: (resp) => {
+                this.conexionEstado = 'conectado';
+                this.mensajeConexion = `Conexión exitosa con el backend (Laravel ${resp.version_laravel} · PHP ${resp.version_php})`;
+                setTimeout(() => { this.conexionEstado = null; }, 5000);
+            },
+            error: (err) => {
+                this.conexionEstado = 'error';
+                this.mensajeConexion = err?.name === 'TimeoutError'
+                    ? 'Tiempo de espera agotado (10s). Verifica que el servidor Laravel esté en ejecución.'
+                    : 'No se pudo conectar con el backend. Verifica que el servidor esté en ejecución.';
+                setTimeout(() => { this.conexionEstado = null; }, 8000);
+            }
+        });
     }
 
     inicializarFormulario(): void {

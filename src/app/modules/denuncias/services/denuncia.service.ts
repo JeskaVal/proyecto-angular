@@ -103,4 +103,9 @@ export class DenunciaService {
             { estado, descripcion }
         );
     }
+
+    // GET /api/ping - Verificar conectividad con el backend
+    verificarConexion(): Observable<any> {
+        return this.http.get<any>(`${environment.apiUrl}/ping`);
+    }
 }

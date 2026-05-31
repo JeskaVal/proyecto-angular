@@ -4,6 +4,20 @@
     <p class="subtitulo">Ayúdanos a mantener la transparencia y combatir la corrupción</p>
   </div>
 
+  <!-- Alerta de prueba de conectividad -->
+  <div *ngIf="conexionEstado" class="alerta alerta-conexion" [ngClass]="{
+    'alerta-conexion--verificando': conexionEstado === 'verificando',
+    'alerta-conexion--ok':          conexionEstado === 'conectado',
+    'alerta-conexion--error':       conexionEstado === 'error'
+  }">
+    <span class="icono-conexion">
+      @if (conexionEstado === 'verificando') { ⏳ }
+      @else if (conexionEstado === 'conectado') { ✅ }
+      @else { ❌ }
+    </span>
+    <span>{{ mensajeConexion }}</span>
+  </div>
+
   <!-- Mensaje de éxito -->
   <div *ngIf="enviado" class="alerta alerta-exito">
     <div class="icono-exito">✓</div>
