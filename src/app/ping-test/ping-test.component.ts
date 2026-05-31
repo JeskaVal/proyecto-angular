@@ -165,22 +165,31 @@ export class PingTestComponent {
     latencia: number | null = null;
     errorDetalle: string | null = null;
 
-    probar(): void {
+probar(): void {
         this.estado = 'cargando';
         this.resultado = null;
         this.errorDetalle = null;
         const inicio = Date.now();
 
-        this.http.get<PingResponse>(`${this.apiUrl}/ping`).subscribe({
+        this.http.get<any>(`${this.apiUrl}/ping`).subscribe({
             next: (res) => {
                 this.latencia = Date.now() - inicio;
-                this.resultado = res;
+                
+                this.resultado = {
+                    status: res.status,
+                    mensaje: res.mensaje,
+                    hora_servidor: res.hora_servidor,
+                    version_php: res.version_php,
+                    version_laravel: res.version_laravel
+                };
+                
                 this.estado = 'exito';
             },
             error: (err) => {
                 this.latencia = Date.now() - inicio;
-                this.errorDetalle = err.message ?? 'Error desconocido';
+                this.errorDetalle = err.error?.message || err.message || 'Error de comunicación';
                 this.estado = 'error';
+                console.error('Detalle completo del fallo:', err);
             }
         });
     }
