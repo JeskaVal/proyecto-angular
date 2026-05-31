@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: '/denuncias/crear',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./modules/auth/components/login/login.component')
+      .then(m => m.LoginComponent)
   },
   {
     path: 'ping',
@@ -31,6 +37,7 @@ export const routes: Routes = [
       },
       {
         path: 'dashboard',
+        canActivate: [authGuard],
         loadComponent: () => import('./modules/denuncias/components/dashboard-admin/dashboard-admin.component')
           .then(m => m.DashboardAdminComponent)
       }
