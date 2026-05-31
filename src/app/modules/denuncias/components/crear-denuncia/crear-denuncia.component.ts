@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DenunciaService } from '../../services/denuncia.service';
@@ -46,7 +47,8 @@ export class CrearDenunciaComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private denunciaService: DenunciaService,
-        private router: Router
+        private router: Router,
+        @Inject(PLATFORM_ID) private platformId: Object
     ) {}
 
     ngOnInit(): void {
@@ -55,6 +57,8 @@ export class CrearDenunciaComponent implements OnInit {
     }
 
     probarConexion(): void {
+        if (!isPlatformBrowser(this.platformId)) return;
+
         this.conexionEstado = 'verificando';
         this.mensajeConexion = 'Verificando conexión con el servidor...';
 
