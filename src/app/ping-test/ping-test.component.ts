@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -157,6 +157,7 @@ interface PingResponse {
 })
 export class PingTestComponent {
     private http = inject(HttpClient);
+    private cdr = inject(ChangeDetectorRef);
 
     readonly apiUrl = environment.apiUrl;
 
@@ -174,7 +175,6 @@ probar(): void {
         this.http.get<any>(`${this.apiUrl}/ping`).subscribe({
             next: (res) => {
                 this.latencia = Date.now() - inicio;
-                
                 this.resultado = {
                     status: res.status,
                     mensaje: res.mensaje,
@@ -182,13 +182,14 @@ probar(): void {
                     version_php: res.version_php,
                     version_laravel: res.version_laravel
                 };
-                
                 this.estado = 'exito';
+                this.cdr.markForCheck();
             },
             error: (err) => {
                 this.latencia = Date.now() - inicio;
                 this.errorDetalle = err.error?.message || err.message || 'Error de comunicación';
                 this.estado = 'error';
+                this.cdr.markForCheck();
                 console.error('Detalle completo del fallo:', err);
             }
         });

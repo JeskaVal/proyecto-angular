@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -48,6 +48,7 @@ export class CrearDenunciaComponent implements OnInit {
         private fb: FormBuilder,
         private denunciaService: DenunciaService,
         private router: Router,
+        private cdr: ChangeDetectorRef,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {}
 
@@ -66,14 +67,16 @@ export class CrearDenunciaComponent implements OnInit {
             next: (resp) => {
                 this.conexionEstado = 'conectado';
                 this.mensajeConexion = `Conexión exitosa con el backend (Laravel ${resp.version_laravel} · PHP ${resp.version_php})`;
-                setTimeout(() => { this.conexionEstado = null; }, 5000);
+                this.cdr.markForCheck();
+                setTimeout(() => { this.conexionEstado = null; this.cdr.markForCheck(); }, 5000);
             },
             error: (err) => {
                 this.conexionEstado = 'error';
                 this.mensajeConexion = err?.name === 'TimeoutError'
                     ? 'Tiempo de espera agotado (10s). Verifica que el servidor Laravel esté en ejecución.'
                     : 'No se pudo conectar con el backend. Verifica que el servidor esté en ejecución.';
-                setTimeout(() => { this.conexionEstado = null; }, 8000);
+                this.cdr.markForCheck();
+                setTimeout(() => { this.conexionEstado = null; this.cdr.markForCheck(); }, 8000);
             }
         });
     }
@@ -142,9 +145,7 @@ export class CrearDenunciaComponent implements OnInit {
                 this.denunciaService.guardarAcuseRecibo(this.acuseRecibo);
                 this.enviado = true;
                 this.cargando = false;
-
-                //Redirigir al acuse de recibo despues de 2 segundos
-
+                this.cdr.markForCheck();
                 setTimeout(() => {
                     this.router.navigate(['/denuncias/acuse-recibo']);
                 }, 2000);
@@ -152,6 +153,7 @@ export class CrearDenunciaComponent implements OnInit {
             error: (error) => {
                 this.cargando = false;
                 this.errorMensaje = error.error?.message || 'Error al crear la denuncia. Intenta nuevamente.';
+                this.cdr.markForCheck();
                 console.error('Error:', error);
             }
         });
